@@ -5,8 +5,12 @@ import org.codehaus.groovy.grails.plugins.DomainClassPluginSupport
 import org.codehaus.groovy.grails.validation.ConstrainedPropertyBuilder
 import org.springframework.validation.BeanPropertyBindingResult
 import org.springframework.validation.Errors
+import org.apache.commons.logging.Log
+import org.apache.commons.logging.LogFactory
 
 class ValidationSupport {
+	static final Log LOG = LogFactory.getLog(ValidationSupport)
+	
 	static addDynamicMethods(application, validateableClass, ctx) {
 		def metaClass = validateableClass.metaClass
 		metaClass.hasErrors = {-> delegate.errors?.hasErrors() }

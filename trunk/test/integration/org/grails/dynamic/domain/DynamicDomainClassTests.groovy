@@ -11,6 +11,7 @@ import org.codehaus.groovy.grails.commons.DefaultGrailsDomainClass
 import org.codehaus.groovy.grails.commons.GrailsDomainClass
 import org.codehaus.groovy.grails.commons.DomainClassArtefactHandler
 import grails.util.GrailsNameUtils
+import org.springframework.jdbc.core.JdbcTemplate
 
 
 class DynamicDomainClassTests extends GrailsUnitTestCase {
@@ -24,6 +25,7 @@ class DynamicDomainClassTests extends GrailsUnitTestCase {
 	protected void setUp() {
 		super.setUp()
 		configurableLocalSessionFactoryBean = grailsApplication.mainContext.getBean("&sessionFactory")
+		jdbcTemplate = new JdbcTemplate(dataSource)
 		String.metaClass.underscore = {
 			GrailsNameUtils.getNaturalName(delegate).replaceAll("\\s", "_").toLowerCase()
 		}
