@@ -26,9 +26,7 @@ Brief description of the plugin.
     }
 
     def doWithSpring = {
-			jdbcTemplate(org.springframework.jdbc.core.JdbcTemplate) { 
-				dataSource=ref("dataSource") 
-			} 
+
 	 }
 
     def doWithDynamicMethods = { ctx ->
