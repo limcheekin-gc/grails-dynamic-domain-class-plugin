@@ -50,7 +50,8 @@ class DynamicDomainClassGrailsPlugin {
     }
 
     def doWithSpring = {
-
+        dynamicDomainService(org.grails.dynamicdomain.DynamicDomainService)
+		    renderEditor(org.grails.dynamicdomain.RenderEditor)
 	 }
 
     def doWithDynamicMethods = { ctx ->
