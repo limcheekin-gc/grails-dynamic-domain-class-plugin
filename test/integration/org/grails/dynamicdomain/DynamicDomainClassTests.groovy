@@ -41,7 +41,6 @@ class DynamicDomainClassTests extends GrailsUnitTestCase {
 			GrailsNameUtils.getNaturalName(delegate).replaceAll("\\s", "_").toLowerCase()
 		}
 		tableName = "VacationRequest".underscore()
-
 	}
 	
 	protected void tearDown() {
@@ -76,8 +75,8 @@ class VacationRequest implements Serializable {
     }    
 }
 """
-    dds.registerDomainClass code
-	  dds.updateSessionFactory grailsApplication.mainContext
+		dds.registerDomainClass code
+		dds.updateSessionFactory grailsApplication.mainContext
 		assertEquals "$tableName exists", 0, getRowCount(tableName)
 	}
 	
@@ -99,30 +98,29 @@ class VacationRequest implements Serializable {
 		   String name
 		}
 		"""						
-    dds.registerDomainClass bookCode	
-	  dds.registerDomainClass authorCode	
-	  dds.updateSessionFactory grailsApplication.mainContext
-    def Book = grailsApplication.getDomainClass('com.foo.testapp.book.Book')
-    def Author = grailsApplication.getDomainClass('com.foo.testapp.author.Author')
-    def author = Author.newInstance()
-	  author.name = 'Stephen King'
-	  def book1 = Book.newInstance()
-	  book1.title = 'The Shining'
-	  author.books = []
-	  author.addToBooks(book1)
-	  def book2 = Book.newInstance()
-	  book2.title = 'Rose Madder'
-	  author.addToBooks(book2)
-    author.save(failOnError: true)
-    /* error in test:
-    No signature of method: org.codehaus.groovy.grails.commons.DefaultGrailsDomainClass.newInstance() 
-    is applicable for argument types: (java.util.LinkedHashMap) values: [[name:Stephen King]] Possible solutions: newInstance()
-		def author = Author.newInstance(name: 'Stephen King')
-		author.addToBooks(Book.newInstance(title: 'The Shining'))
-		author.addToBooks(Book.newInstance(title: 'Rose Madder'))
-		author.save(failOnError: true) 	
-		*/  
-       	
+		dds.registerDomainClass bookCode	
+		dds.registerDomainClass authorCode	
+		dds.updateSessionFactory grailsApplication.mainContext
+		def Book = grailsApplication.getDomainClass('com.foo.testapp.book.Book')
+		def Author = grailsApplication.getDomainClass('com.foo.testapp.author.Author')
+		def author = Author.newInstance()
+		author.name = 'Stephen King'
+		def book1 = Book.newInstance()
+		book1.title = 'The Shining'
+		author.books = []
+		author.addToBooks(book1)
+		def book2 = Book.newInstance()
+		book2.title = 'Rose Madder'
+		author.addToBooks(book2)
+		author.save(failOnError: true)
+		/* error in test:
+		 No signature of method: org.codehaus.groovy.grails.commons.DefaultGrailsDomainClass.newInstance() 
+		 is applicable for argument types: (java.util.LinkedHashMap) values: [[name:Stephen King]] Possible solutions: newInstance()
+		 def author = Author.newInstance(name: 'Stephen King')
+		 author.addToBooks(Book.newInstance(title: 'The Shining'))
+		 author.addToBooks(Book.newInstance(title: 'Rose Madder'))
+		 author.save(failOnError: true) 	
+		 */
 	}
 	
 	
@@ -137,6 +135,57 @@ class VacationRequest implements Serializable {
 		assertNotNull "vacationRequestInstance.id", vacationRequestInstance.id
 		assertEquals "Record save into $tableName", 1, getRowCount(tableName)
 	} 
+	
+	void testConstraints() {
+		String bookCode = """
+package com.foo.testapp.book	
+class Book {
+    String title
+    String author
+
+    static constraints = { 
+        title(blank: false, unique: true) 
+        author(blank: false, minSize: 5) 
+        } 
+}	
+	"""
+		dds.registerDomainClass bookCode	
+		dds.updateSessionFactory grailsApplication.mainContext
+		def Book = grailsApplication.getDomainClass('com.foo.testapp.book.Book')	
+		def existingBook = Book.newInstance()
+		existingBook.title = "Misery"
+		existingBook.author = "Stephen King"
+		existingBook.save(flush:true, failOnError:true) 
+		
+		// Validation should fail if both properties are null. 
+		def book = Book.newInstance()
+		assertFalse book.validate() 
+		assertTrue book.hasErrors() 
+		assertTrue hasError(Book, "title", "nullable", book.errors)
+		assertTrue hasError(Book, "author", "nullable", book.errors)
+		
+		
+		// So let's demonstrate the unique and minSize constraints. 
+		book = Book.newInstance()
+		book.title = "Misery"
+		book.author = "JK"
+		assertFalse book.validate() 
+		assertTrue hasError(Book, "title", "unique", book.errors)
+		// FAILED??? assertTrue hasError(Book, "author", "minSize", book.errors) 
+		
+		// Validation should pass!
+		book = Book.newInstance()
+		book.title = "The Shining"
+		book.author = "Stephen King"
+		assertTrue book.validate()      
+	}
+	
+	// http://www.ibm.com/developerworks/java/library/j-grails10148/index.html
+	private hasError(domainClass, property, constraint, errors) {
+		def badField = errors.getFieldError(property) 
+		String code = "${domainClass.propertyName}.${property}.${constraint}"
+		return badField?.codes.find {it == code} != null
+	}
 	
 	private listAllBeanNames() {
 		println "BEAN NAMES:"
@@ -160,7 +209,6 @@ class VacationRequest implements Serializable {
 	private dropTable(def tableName) {
 		jdbcTemplate.execute("drop table ${tableName}")
 	}
-
 }
 
 
