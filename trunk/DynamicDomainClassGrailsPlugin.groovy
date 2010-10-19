@@ -38,8 +38,9 @@ class DynamicDomainClassGrailsPlugin {
  The Dynamic Domain Class plugin enabled Grails application to create domain class dynamically 
  when application is running.
 
- Project Site and Documentation: http://code.google.com/p/grails-dynamic-domain-class-plugin/
- Support: http://code.google.com/p/grails-dynamic-domain-class-plugin/issues/list
+ * Project Site and Documentation: http://code.google.com/p/grails-dynamic-domain-class-plugin/
+ * Support: http://code.google.com/p/grails-dynamic-domain-class-plugin/issues/list
+ * Discussion Forum: http://groups.google.com/group/grails-dynamic-domain-class-plugin
 '''
 
     // URL to the plugin's documentation

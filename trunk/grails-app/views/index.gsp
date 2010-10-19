@@ -1,9 +1,36 @@
+<%--
+/* Copyright 2010 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * @author <a href='mailto:limcheekin@vobject.com'>Lim Chee Kin</a>
+ *
+ * @since 0.1
+ */
+ --%>
+ 
 <%
 String defaultDomainClassCode = """
 package com.foo.testapp.book
 
 class Book {
    String title
+   String description
+
+   static constraints = { 
+        title(blank: false) 
+        description(blank: false) 
+   } 
 }
 
 package com.foo.testapp.author
@@ -100,11 +127,15 @@ class Author {
         </div>
         <div id="pageBody">
             <h1>Welcome to Grails</h1>
-            <p>Congratulations, you have successfully started your first Grails application! At the moment
-            this is the default page, feel free to modify it to either redirect to a controller or display whatever
-            content you may choose. Below is a list of controllers that are currently deployed in this application,
-            click on each to execute its default action:</p>
-						<div id="domainClassCreationPanel" class="dialog">         
+            <p>Congratulations, you have successfully started your first Grails application!
+            The index.gsp file is overwritten during the installation of Grails Dynamic Domain Class Plugin, 
+            but you need not to worry as the original version of overwritten index.gsp file are backup as index.bak file, 
+            you can restore to original version of the overwritten file as necessary. 
+            This is the default page, feel free to modify it to either redirect to a controller or display whatever
+            content you may choose. First, you need to create domain class(es) using text box below and then you will see 
+            list of controllers for domain class(es) you created, click on each to execute its default action:</p>
+						<div id="domainClassCreationPanel" class="dialog">  
+						<h2>Create Dynamic Domain Class(es):</h2>       
 						  <%
 							if (params?.domainClassCode && params?.domainClassCode.stripIndent() != "") {
             			def dds = grailsApplication.mainContext.dynamicDomainService
@@ -118,10 +149,10 @@ class Author {
 						    %>  
 						  <g:form>
 						    <p>Enter the domain class(es) code here (must be declared in package):</p> 
-							  <g:textArea name="domainClassCode" cols="80" rows="10" value="${params?.domainClassCode?:defaultDomainClassCode}" />
+							  <g:textArea name="domainClassCode" cols="80" rows="10" value="${params?.domainClassCode?:defaultDomainClassCode}" style="width: 500px"/>
                 <p>
                    <span class="button">
-                       <g:submitButton name="create" class="save" value="Create Domain Class" />
+                       <g:submitButton name="create" class="save" value="Create Domain Class(es)" />
                        <input type="button" value="Clear" onclick="javascript: document.forms[0].domainClassCode.value=''"/>
                    </span>
                 </p>
