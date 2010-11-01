@@ -23,6 +23,8 @@ import org.codehaus.groovy.grails.commons.ApplicationHolder
 import org.codehaus.groovy.grails.compiler.injection.ClassInjector
 import org.codehaus.groovy.grails.compiler.injection.GrailsAwareClassLoader
 import org.codehaus.groovy.grails.compiler.injection.GrailsAwareInjectionOperation
+import org.springframework.util.ReflectionUtils
+import org.codehaus.groovy.grails.commons.DefaultGrailsApplication
 
 /**
  * Uses a custom injector.
@@ -38,6 +40,7 @@ class DynamicClassLoader extends GrailsAwareClassLoader {
 	DynamicClassLoader() {
 		super(ApplicationHolder.application.classLoader, CompilerConfiguration.DEFAULT)
 		classInjectors = _classInjectors
+		setClassLoader()
 	}
 
 	@Override
@@ -47,4 +50,12 @@ class DynamicClassLoader extends GrailsAwareClassLoader {
 			getResourceLoader(), _classInjectors), Phases.CANONICALIZATION)
 		cu
 	}
+	
+	// Register class to classLoader's private loadedClasses field
+	private void setClassLoader() {
+			def field = ReflectionUtils.findField(DefaultGrailsApplication.class, "cl")
+			field.accessible = true		
+			// def classLoader = field.get(ApplicationHolder.application)
+	    field.set ApplicationHolder.application, this
+   }	
 }

@@ -42,7 +42,8 @@ import org.codehaus.groovy.grails.plugins.ValidationGrailsPlugin
  * @since 0.1
  */
 class DynamicDomainService {
-
+  DynamicClassLoader dynamicClassLoader = new DynamicClassLoader()
+  
 	void registerDomainClass(String code) {
 		def application = AH.application
 
@@ -72,8 +73,8 @@ class DynamicDomainService {
 	}
 	
 	private Class compile(String code, application) {
-		Class clazz = new DynamicClassLoader().parseClass(code)
-		application.classLoader.setClassCacheEntry clazz // TODO hack
+		Class clazz = dynamicClassLoader.parseClass(code)
+		// application.classLoader.setClassCacheEntry clazz // TODO hack
 		clazz
 	}
 
@@ -137,6 +138,7 @@ class DynamicDomainService {
 		newSessionFactoryFactory.afterPropertiesSet()
 
 		def newSessionFactory = newSessionFactoryFactory.object
+		// newSessionFactoryFactory.updateDatabaseSchema()
 
 		['entityPersisters', 'collectionPersisters', 'identifierGenerators',
 		 'namedQueries', 'namedSqlQueries', 'sqlResultSetMappings', 'imports',

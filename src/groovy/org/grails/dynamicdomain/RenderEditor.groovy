@@ -94,12 +94,12 @@ class RenderEditor {
 	
 	private renderManyToOne(domainClass,property) {
 		if (property.association) {
-			return "<g:select name=\"${property.name}.id\" from=\"\${${property.type.name}.list()}\" optionKey=\"id\" value=\"\${domainInstance?.${property.name}?.id}\" ${renderNoSelection(property)} />"
+			return "<g:select name=\"${property.name}.id\" from=\"\${grailsApplication.getDomainClass('${property.type.name}').clazz.list()}\" optionKey=\"id\" value=\"\${domainInstance?.${property.name}?.id}\" ${renderNoSelection(property)} />"
 		}
 	}
 	
 	private renderManyToMany(domainClass, property) {
-		return "<g:select name=\"${property.name}\" from=\"\${${property.referencedDomainClass.fullName}.list()}\" multiple=\"yes\" optionKey=\"id\" size=\"5\" value=\"\${domainInstance?.${property.name}*.id}\" />"
+		return "<g:select name=\"${property.name}\" from=\"\${grailsApplication.getDomainClass('${property.referencedDomainClass.fullName}').clazz.list()}\" multiple=\"yes\" optionKey=\"id\" size=\"5\" value=\"\${domainInstance?.${property.name}*.id}\" />"
 	}
 	
 	private renderOneToMany(domainClass, property) {

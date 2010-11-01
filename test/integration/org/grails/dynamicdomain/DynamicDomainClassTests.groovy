@@ -108,7 +108,7 @@ class VacationRequest implements Serializable {
 		def book1 = Book.newInstance()
 		book1.title = 'The Shining'
 		author.books = []
-		author.addToBooks(book1)
+		author.addToBooks(book1) // addTo*() not working
 		def book2 = Book.newInstance()
 		book2.title = 'Rose Madder'
 		author.addToBooks(book2)
