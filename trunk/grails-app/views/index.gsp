@@ -17,8 +17,7 @@
  *
  * @since 0.1
  */
- --%>
- 
+ --%> 
 <%
 String defaultDomainClassCode = """
 package com.foo.testapp.book
@@ -133,7 +132,8 @@ class Author {
             you can restore to original version of the overwritten file as necessary. 
             This is the default page, feel free to modify it to either redirect to a controller or display whatever
             content you may choose. First, you need to create domain class(es) using text box below and then you will see 
-            list of controllers for domain class(es) you created, click on each to execute its default action:</p>
+            list of controllers for domain class(es) you created in Dynamic Controllers section, click on each to execute its default action. 
+            Next, follow by Other Controllers section to display list of available Grails controllers:</p>
 						<div id="domainClassCreationPanel" class="dialog">  
 						<h2>Create Dynamic Domain Class(es):</h2>       
 						  <%
@@ -159,13 +159,25 @@ class Author {
 							</g:form>
 						</div>
             <div id="controllerList" class="dialog">
-                <h2>Available Controllers:</h2>
+                <h2>Dynamic Controllers:</h2>
                 <ul>
                     <g:each var="dc" in="${grailsApplication.domainClasses.sort { it.fullName } }">
-                        <li class="controller"><g:link controller="ddc" params="[dc:dc.fullName]">${dc.fullName}</g:link></li>
+                      <% if (!grailsApplication.getControllerClass("${dc.fullName}Controller")) { %>
+                        <li class="controller"><g:link controller="ddc" params="[dc:dc.fullName]">${dc.fullName}Controller</g:link></li>
+                                          <% } %>
                     </g:each>
                 </ul>
             </div>
+            <div id="controllerList" class="dialog">
+                <h2>Other Controllers:</h2>
+                <ul>
+                    <g:each var="c" in="${grailsApplication.controllerClasses.sort { it.fullName } }">
+                    		<g:if test="${c.fullName != 'org.grails.dynamicdomain.DdcController'}">
+                       	 	<li class="controller"><g:link controller="${c.logicalPropertyName}">${c.fullName}</g:link></li>
+                       	</g:if>
+                    </g:each>
+                </ul>
+            </div>                
         </div>
     </body>
 </html>
