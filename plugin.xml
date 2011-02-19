@@ -1,0 +1,24 @@
+<plugin name='dynamic-domain-class' version='0.3' grailsVersion='1.2 &gt; *'>
+  <author>Lim Chee Kin</author>
+  <authorEmail>limcheekin@vobject.com</authorEmail>
+  <title>Grails Dynamic Domain Class Plugin - Create domain class on-the-fly</title>
+  <description>
+ The Dynamic Domain Class plugin enabled Grails application to create domain class dynamically 
+ when application is running.
+
+ * Project Site and Documentation: http://code.google.com/p/grails-dynamic-domain-class-plugin/
+ * Support: http://code.google.com/p/grails-dynamic-domain-class-plugin/issues/list
+ * Discussion Forum: http://groups.google.com/group/grails-dynamic-domain-class-plugin
+</description>
+  <documentation>http://grails.org/plugin/dynamic-domain-class</documentation>
+  <resources>
+    <resource>BuildConfig</resource>
+    <resource>Config</resource>
+    <resource>DataSource</resource>
+    <resource>UrlMappings</resource>
+  </resources>
+  <dependencies>
+    <plugin name='hibernate' version='1.2 &gt; *' />
+  </dependencies>
+  <behavior />
+</plugin>
